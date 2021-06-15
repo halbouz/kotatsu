@@ -14,7 +14,7 @@ body {
     display: inline-grid;
     grid-template-columns: repeat(10, 10px);
     grid-template-rows: repeat(10, 10px);
-    grid-gap: 2rem;
+    grid-gap: 3em;
 }
 
 .cell {
