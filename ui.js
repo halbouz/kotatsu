@@ -31,7 +31,7 @@ for (let c of cell) {
         c.textContent = event.key;
         console.log(c.textContent);
       }
-    } else if (event.key !== 'Shift' && event.key !== 'Control' && event.key !== 'Alt' && event.key !== 'Meta' && !(/^F[1-9]+/.test(event.key))) {
+    } else if (event.key !== 'Shift' && event.key !== 'Control' && event.key !== 'Alt' && event.key !== 'Meta' && !(/^F[0-9]+/.test(event.key))) {
       c.blur();
     }
   });
