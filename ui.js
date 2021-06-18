@@ -3,7 +3,7 @@ let isCtrlPressed = false;
 
 for (let i = 0; i < 10; i++) {
   for (let j = 0; j < 10; j++){
-    grid.innerHTML += `<div class='cell' id='(${i},${j})' contenteditable=true>.</div>`;
+    grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>.</div>`;
   }
 }
 
@@ -31,7 +31,7 @@ for (let c of cell) {
         c.textContent = event.key;
         console.log(c.textContent);
       }
-    } else if (event.key !== 'Shift' && event.key !== 'Control' && event.key !== 'Alt' && event.key !== 'Meta' && !(/^F[0-9]+/.test(event.key))) {
+    } else if (event.key !== 'Shift' && event.key !== 'Control' && event.key !== 'Alt' && event.key !== 'Meta' && !(/^F[0-9]+$/.test(event.key))) {
       c.blur();
     }
   });
