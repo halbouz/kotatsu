@@ -14,48 +14,48 @@ window.addEventListener("load", async () => {
     }
   }
 
-  // document.addEventListener("keydown", (event) => {
-  //   if (event.ctrlKey) {
-  //     isCtrlPressed = true;
-  //   }
-  // });
+  document.addEventListener("keydown", (event) => {
+    if (event.ctrlKey) {
+      isCtrlPressed = true;
+    }
+  });
   
-  // document.addEventListener("keyup", (event) => {
-  //   if (!event.ctrlKey) {
-  //     isCtrlPressed = false;
-  //   }
-  // });
+  document.addEventListener("keyup", (event) => {
+    if (!event.ctrlKey) {
+      isCtrlPressed = false;
+    }
+  });
   
-  // const cell = document.querySelectorAll(".cell");
+  const cell = document.querySelectorAll(".cell");
   
-  // for (let c of cell) {
-  //   c.addEventListener("keydown", (event) => {
-  //     if (event.key === "Backspace" || event.key === "Delete") {
-  //       event.preventDefault();
-  //       c.textContent = ".";
-  //     } else if (/^[^\s]$/i.test(event.key)) {
-  //       if (!isCtrlPressed) {
-  //         c.textContent = event.key;
-  //         console.log(c.textContent);
-  //       }
-  //     } else if (
-  //       event.key !== "Shift" &&
-  //       event.key !== "Control" &&
-  //       event.key !== "Alt" &&
-  //       event.key !== "Meta" &&
-  //       !/^F[0-9]+$/.test(event.key)
-  //     ) {
-  //       c.blur();
-  //     }
-  //   });
-  //   c.addEventListener("beforeinput", () => {
-  //     c.textContent = "";
-  //   });
-  //   c.addEventListener("input", () => {
-  //     if (c.textContent.length > 5) {
-  //       c.textContent = ".";
-  //     }
-  //   });
-  // }
+  for (let c of cell) {
+    c.addEventListener("keydown", (event) => {
+      if (event.key === "Backspace" || event.key === "Delete") {
+        event.preventDefault();
+        c.textContent = ".";
+      } else if (/^[^\s]$/i.test(event.key)) {
+        if (!isCtrlPressed) {
+          c.textContent = event.key;
+          console.log(c.textContent);
+        }
+      } else if (
+        event.key !== "Shift" &&
+        event.key !== "Control" &&
+        event.key !== "Alt" &&
+        event.key !== "Meta" &&
+        !/^F[0-9]+$/.test(event.key)
+      ) {
+        c.blur();
+      }
+    });
+    c.addEventListener("beforeinput", () => {
+      c.textContent = "";
+    });
+    c.addEventListener("input", () => {
+      if (c.textContent.length > 5) {
+        c.textContent = ".";
+      }
+    });
+  }
   
 });
