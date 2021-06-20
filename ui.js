@@ -30,10 +30,22 @@ window.addEventListener("load", async () => {
   for (let i = 1; i < 11; i++) {
     for (let j = 1; j < 11; j++) {
       let c = document.getElementById(`${i}_${j}`);
-      c.addEventListener("keydown", (event) => {
+      c.addEventListener("keydown", async (event) => {
         if (event.key === "Backspace" || event.key === "Delete") {
           event.preventDefault();
           c.textContent = ".";
+          const response = await fetch(`https://kotatsu-server-silk.vercel.app/api/${i}_${j}`, {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            char: '.'
+          }),
+        });
+        const success = await response.json();
+        console.log(success);
         } else if (/^[^\s]$/i.test(event.key)) {
           if (!isCtrlPressed) {
             c.textContent = event.key;
