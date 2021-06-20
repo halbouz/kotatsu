@@ -61,11 +61,13 @@ window.addEventListener("load", async () => {
         fetch(`https://kotatsu-server-silk.vercel.app/api/${i}_${j}`, {
           method: "POST",
           headers: {
-            "Content-Type": "text/plain",
+            "Content-Type": "application/json",
           },
-          body: c.textContent,
+          body: {
+            char: c.textContent
+          },
         })
-          .then((res) => res.text())
+          .then((res) => res.json())
           .then((data) => {
             console.log("Success:", data);
           })
