@@ -27,6 +27,7 @@ window.addEventListener("load", async () => {
     }
   }
 
+  // for deployment
   for (let i = 1; i < 11; i++) {
     for (let j = 1; j < 11; j++) {
       let c = document.getElementById(`${i}_${j}`);
