@@ -53,27 +53,24 @@ window.addEventListener("load", async () => {
           c.textContent = "";
         }
       });
-      c.addEventListener("input", () => {
+      c.addEventListener("input", async () => {
         if (c.textContent.length > 5) {
           c.textContent = ".";
         }
         console.log(c.textContent)
-        fetch(`https://kotatsu-server-silk.vercel.app/api/${i}_${j}`, {
+        console.log(`${i}_${j}`);
+        const response = await fetch(`https://kotatsu-server-silk.vercel.app/api/${i}_${j}`, {
           method: "POST",
           headers: {
+            'Accept': 'application/json',
             "Content-Type": "application/json",
           },
-          body: {
+          body: JSON.stringify({
             char: c.textContent
-          },
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            console.log("Success:", data);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+          }),
+        });
+        const success = await response.json();
+        console.log(success);
       });
     }
   }
