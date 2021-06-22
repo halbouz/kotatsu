@@ -98,10 +98,7 @@ window.addEventListener("load", async () => {
     }
     const response = await fetch(`https://kotatsu-server-silk.vercel.app/api/board`, {
       method: "POST",
-      headers: {
-        'Accept': 'application/json',
-        "Content-Type": "application/json",
-      },
+      headers: {},
       body: {}
     });
     const success = await response.json();
