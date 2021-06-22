@@ -24,6 +24,7 @@ body {
 
 #reset{
     position: absolute;
+    border-radius: 10%;
     left: 50%;
     transform: translateX(-50%);
     height: 50px;

@@ -1,11 +1,4 @@
 window.addEventListener("load", async () => {
-  const initial_board = {}
-  for (let i = 1; i < 11; i++) {
-    for (let j = 1; j < 11; j++) {
-      initial_board[`${i}_${j}`] = '.';
-    }
-  }
-
   const response = await fetch(
     "https://kotatsu-server-silk.vercel.app/api/board"
   );
@@ -104,17 +97,14 @@ window.addEventListener("load", async () => {
       }
     }
     const response = await fetch(`https://kotatsu-server-silk.vercel.app/api/board`, {
-            method: "POST",
-            headers: {
-              'Accept': 'application/json',
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              new_board: initial_board
-            }),
-          });
-          const success = await response.json();
-          console.log(success);
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+      },
+      body: {}
+    });
+    const success = await response.json();
+    console.log(success);
   })
-
 });
