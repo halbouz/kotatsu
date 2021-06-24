@@ -51,9 +51,7 @@ window.addEventListener("load", async () => {
           const success = await response.json();
           console.log(success);
         } else if (/^[^\s]$/i.test(event.key)) {
-          if (!isCtrlPressed) {
-            c.textContent = event.key;
-          }
+          if (!isCtrlPressed) c.textContent = event.key;
         } else if (
           event.key !== "Shift" &&
           event.key !== "Control" &&
