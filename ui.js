@@ -6,6 +6,13 @@ window.addEventListener("load", async () => {
   console.log(board);
 
   const grid = document.getElementById("grid");
+  for (let i = 1; i < 11; i++) {
+    for (let j = 1; j < 11; j++) {
+      let coord = board[`${i}_${j}`];
+      grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
+    }
+  }
+
   let isCtrlPressed = false;
 
   document.addEventListener("keydown", (event) => {
@@ -19,13 +26,6 @@ window.addEventListener("load", async () => {
       isCtrlPressed = false;
     }
   });
-
-  for (let i = 1; i < 11; i++) {
-    for (let j = 1; j < 11; j++) {
-      let coord = board[`${i}_${j}`];
-      grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
-    }
-  }
 
   // for deployment
   for (let i = 1; i < 11; i++) {
