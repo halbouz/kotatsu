@@ -3,7 +3,6 @@ window.addEventListener("load", async () => {
     "https://kotatsu-server-silk.vercel.app/api/board"
   );
   const board = await response.json();
-  console.log(board);
 
   const grid = document.getElementById("grid");
   for (let i = 1; i < 11; i++) {
@@ -34,53 +33,29 @@ window.addEventListener("load", async () => {
       c.addEventListener("keydown", async (event) => {
         if (event.key === "Backspace" || event.key === "Delete") {
           event.preventDefault();
-          c.textContent = ".";
-          const response = await fetch(
-            `https://kotatsu-server-silk.vercel.app/api/${i}_${j}`,
-            {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                char: ".",
-              }),
-            }
-          );
-          const success = await response.json();
-          console.log(success);
-        } else if (/^[^\s]$/i.test(event.key)) {
-          if (!isCtrlPressed) c.textContent = event.key;
-        } else if (
-          event.key !== "Shift" &&
-          event.key !== "Control" &&
-          event.key !== "Alt" &&
-          event.key !== "Meta" &&
-          !/^F[0-9]+$/.test(event.key)
-        ) {
-          c.blur();
         }
       });
       c.addEventListener("beforeinput", () => {
         c.textContent = "";
       });
       c.addEventListener("input", async () => {
+        if (c.textContent.length == 0) {
+          c.textContent = "."
+        }
         if (c.textContent.length > 5) {
           c.textContent = ".";
         }
-        console.log(c.textContent);
-        console.log(`${i}_${j}`);
         const response = await fetch(
-          `https://kotatsu-server-silk.vercel.app/api/${i}_${j}`,
+          `https://kotatsu-server-silk.vercel.app/api/board`,
           {
-            method: "POST",
+            method: "PUT",
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               char: c.textContent,
+              coord: `${i}_${j}`
             }),
           }
         );
