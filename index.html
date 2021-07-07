@@ -27,7 +27,7 @@
             //   body:    "3"
             // }
             //   // Version will contain either patches *or* body
-            const board = await response.json();
+            const board = JSON.parse(version.body);
 
             const grid = document.getElementById("grid");
             for (let i = 1; i < 11; i++) {
