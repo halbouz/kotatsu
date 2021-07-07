@@ -1,3 +1,16 @@
+async function braidFetch(method, headers, body) {
+  const response = await fetch(
+    `https://kotatsu-server-silk.vercel.app/api/board`,
+    {
+      method,
+      headers,
+      body
+    }
+  );
+  const json = await response.json()
+  return json;
+}
+
 window.addEventListener("load", async () => {
   const response = await fetch(
     "https://kotatsu-server-silk.vercel.app/api/board"
@@ -45,22 +58,18 @@ window.addEventListener("load", async () => {
         if (c.textContent.length > 5) {
           c.textContent = ".";
         }
-        const response = await fetch(
-          `https://kotatsu-server-silk.vercel.app/api/board`,
+        const response = await braidFetch(
+          "POST", 
           {
-            method: "PUT",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              char: c.textContent,
-              coord: `${i}_${j}`
-            }),
-          }
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+          JSON.stringify({
+            char: c.textContent,
+            coord: `${i}_${j}`
+          })
         );
-        const success = await response.json();
-        console.log(success);
+        console.log(response);
       });
     }
   }
@@ -73,15 +82,7 @@ window.addEventListener("load", async () => {
         c.textContent = ".";
       }
     }
-    const response = await fetch(
-      `https://kotatsu-server-silk.vercel.app/api/board`,
-      {
-        method: "POST",
-        headers: {},
-        body: {},
-      }
-    );
-    const success = await response.json();
-    console.log(success);
+    const response = await braidFetch("POST", {}, {});
+    console.log(response);
   });
 });
