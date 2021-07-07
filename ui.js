@@ -44,7 +44,7 @@ window.addEventListener("load", async () => {
     for (let j = 1; j < 11; j++) {
       let c = document.getElementById(`${i}_${j}`);
       c.addEventListener("keydown", async (event) => {
-        if (event.key === "Backspace" || event.key === "Delete") {
+        if (event.key === "Backspace" || event.key === "Delete" || event.key === " " || event.key === "Enter") {
           event.preventDefault();
         }
       });
@@ -52,14 +52,11 @@ window.addEventListener("load", async () => {
         c.textContent = "";
       });
       c.addEventListener("input", async () => {
-        if (c.textContent.length == 0) {
-          c.textContent = "."
-        }
         if (c.textContent.length > 5) {
           c.textContent = ".";
         }
         const response = await braidFetch(
-          "POST", 
+          "PUT", 
           {
             "Accept": "application/json",
             "Content-Type": "application/json",
