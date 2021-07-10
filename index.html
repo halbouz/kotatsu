@@ -12,13 +12,6 @@
     <script src="braidify-client.js"></script>
     <script>
       fetch("https://kotatsu-server-silk.vercel.app/api/board", {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods":
-            "OPTIONS, HEAD, GET, PUT, UNSUBSCRIBE",
-          "Access-Control-Allow-Headers":
-            "subscribe, peer, version, parents, merge-type, content-type, patches, cache-control, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
-        },
         subscribe: { keep_alive: true },
       }).andThen((version) => {
         console.log("We got a new version!", version);
