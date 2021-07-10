@@ -143,18 +143,18 @@ if (is_nodejs) {
 function braid_fetch (url, params = {}) {
     // Initialize the headers object
     if (!params.headers)
-        params.headers = new Headers()
+        params.headers = {}
 
     // Always set the peer
-    params.headers.set('peer', peer)
+    params.headers['peer'] = peer
 
     // We provide some shortcuts for Braid params
     if (params.version)
-        params.headers.set('version', JSON.stringify(params.version))
+        params.headers['version'] =  JSON.stringify(params.version)
     if (params.parents)
-        params.headers.set('parents', params.parents.map(JSON.stringify).join(', '))
+        params.headers['parents'] = params.parents.map(JSON.stringify).join(', ')
     if (params.subscribe)
-        params.headers.set('subscribe', 'true')
+        params.headers['subscribe'] = 'true'
 
     // Prepare patches
     if (params.patches) {
@@ -162,7 +162,7 @@ function braid_fetch (url, params = {}) {
         console.assert(!params.body, 'Cannot send both patches and body')
 
         params.patches = params.patches || []
-        params.headers.set('patches', params.patches.length)
+        params.headers['patches'] = params.patches.length
         params.body = (params.patches).map(patch => {
             var length = `content-length: ${patch.content.length}`
             var range = `content-range: ${patch.unit} ${patch.range}`

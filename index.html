@@ -4,20 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
-    <script src="ui.js"></script>
-    <title>kotatsu</title>
+    <title>Kotatsu</title>
 </head>
 <body>
     <button id="reset">Reset Board</button>
     <div id="grid">
     </div>
-
-    <!-- <script src="braidify-client.js"></script>
+    <script src="braidify-client.js"></script>
     <script>
-
         fetch(
             'https://kotatsu-server-silk.vercel.app/api/board',
-            { subscribe: { keep_alive: true } },
+            { 
+                subscribe: { keep_alive: true } 
+            },
         ).andThen(version => {
             console.log('We got a new version!', version)
             // {
@@ -28,7 +27,7 @@
             // }
             //   // Version will contain either patches *or* body
             const board = JSON.parse(version.body);
-
+            console.log(board)
             const grid = document.getElementById("grid");
             for (let i = 1; i < 11; i++) {
                 for (let j = 1; j < 11; j++) {
@@ -37,6 +36,7 @@
                 }
             }
         })
-    </script> -->
+    </script>
+    <!--<script src="ui.js"></script>-->
 </body>
 </html>
