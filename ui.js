@@ -12,18 +12,18 @@ async function braidFetch(method, headers, body) {
 }
 
 window.addEventListener("load", async () => {
-  // const response = await fetch(
-  //   "https://kotatsu-server-silk.vercel.app/api/board"
-  // );
-  // const board = await response.json();
+  const response = await fetch(
+    "https://kotatsu-server-silk.vercel.app/api/board"
+  );
+  const board = await response.json();
 
-  // const grid = document.getElementById("grid");
-  // for (let i = 1; i < 11; i++) {
-  //   for (let j = 1; j < 11; j++) {
-  //     let coord = board[`${i}_${j}`];
-  //     grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
-  //   }
-  // }
+  const grid = document.getElementById("grid");
+  for (let i = 1; i < 11; i++) {
+    for (let j = 1; j < 11; j++) {
+      let coord = board[`${i}_${j}`];
+      grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
+    }
+  }
 
   let isCtrlPressed = false;
 
@@ -55,7 +55,7 @@ window.addEventListener("load", async () => {
         if (c.textContent.length > 5) {
           c.textContent = ".";
         }
-        const response = await braidFetch(
+        const response = await fetch(
           "PUT", 
           {
             "Accept": "application/json",
@@ -79,7 +79,7 @@ window.addEventListener("load", async () => {
         c.textContent = ".";
       }
     }
-    const response = await braidFetch("POST", {}, {});
+    const response = await fetch("POST", {}, {});
     console.log(response);
   });
 });
