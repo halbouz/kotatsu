@@ -1,6 +1,6 @@
 async function braidFetch(method, headers, body) {
   const response = await fetch(
-    `https://kotatsu-server-silk.vercel.app/api/board`,
+    `https://kotatsu.app/api/board`,
     {
       method,
       headers,
@@ -12,9 +12,7 @@ async function braidFetch(method, headers, body) {
 }
 
 window.addEventListener("load", async () => {
-  const board = await braidFetch(
-    "https://kotatsu-server-silk.vercel.app/api/board"
-  );
+  const board = await braidFetch();
   console.log(board);
 
   const grid = document.getElementById("grid");

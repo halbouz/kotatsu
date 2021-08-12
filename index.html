@@ -78,6 +78,27 @@
         }
       });
     </script> -->
+    <script id="fork-me">
+      console.log('fork me!');
+      // watcher that watches for any update in the document
+      // if there is an update to a script tag:
+      // - save the element to localstorage where the key is the element.id
+      // body.addEventListener('on_update', () => {
+      //    if update element is script tag 
+      //    -> save innerHTML to localstorage under key `kotatsu-script: ${tag.id}`
+      // })
+
+      // - load all script tags from localstorage by searching for `kotatsu-script: id`
+      let scriptKeys = Object.keys(localStorage);
+      for (const key of scriptKeys) {
+        // confirm key is kotatsu-script
+        // strip `kotatsu-script: ` from beginning of key
+        // create script tag then load innerHTML as localStorage.getItem(key)
+        // set tag.id = id in step 1
+        // body.appendChild(tag)
+      }
+      console.log(Object.keys(localStorage));
+    </script>
     <script id="save-styles">
       if (localStorage.getItem('kotatsu')) {
         document.querySelector('style').innerHTML = localStorage.getItem('kotatsu')
