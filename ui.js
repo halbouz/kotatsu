@@ -12,10 +12,10 @@ async function braidFetch(method, headers, body) {
 }
 
 window.addEventListener("load", async () => {
-  const response = await fetch(
+  const board = await braidFetch(
     "https://kotatsu-server-silk.vercel.app/api/board"
   );
-  const board = await response.json();
+  console.log(board);
 
   const grid = document.getElementById("grid");
   for (let i = 1; i < 11; i++) {
@@ -55,7 +55,7 @@ window.addEventListener("load", async () => {
         if (c.textContent.length > 5) {
           c.textContent = ".";
         }
-        const response = await fetch(
+        const response = await braidFetch(
           "PUT", 
           {
             "Accept": "application/json",
@@ -79,7 +79,7 @@ window.addEventListener("load", async () => {
         c.textContent = ".";
       }
     }
-    const response = await fetch("POST", {}, {});
+    const response = await braidFetch("POST", {}, {});
     console.log(response);
   });
 });
