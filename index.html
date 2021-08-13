@@ -88,19 +88,25 @@
           let s = document.createElement("script");
           s.id = key.substr(16);
           s.innerHTML = value;
-          body.appendChild(s);
+          document.body.appendChild(s);
         }
       }
-      
+
       // watcher that watches for any update in the document
       // if there is an update to a script tag:
       // - save the element to localstorage where the key is the element.id
       var observer = new MutationObserver((mutations) => {
         let scripts = document.querySelectorAll("script");
+        for(let mutation of mutations) {
+          if (mutation.removedNodes.length) {
+            const [removed] = mutation.removedNodes;
+            localStorage.removeItem(`kotatsu-script: ${removed.id}`)
+          }
+        }
+
         for (let scr of scripts) {
-          if (!localStorage.getItem(`kotatsu-script: ${scr.id}`)) {
+          if (scr.id != 'ui' && scr.id != 'fork-me' && scr.id != 'save-styles') {
             localStorage.setItem(`kotatsu-script: ${scr.id}`, scr.innerHTML);
-            //document.body.appendChild(scr)
           }
         }
       });
@@ -130,6 +136,6 @@
         subtree: true,
       });
     </script>
-    <script src="ui.js"></script>
+    <script src="ui.js" id="ui"></script>
   </body>
 </html>
