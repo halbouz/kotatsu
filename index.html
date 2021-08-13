@@ -79,34 +79,42 @@
       });
     </script> -->
     <script id="fork-me">
-      console.log('fork me!');
+      console.log("fork me!");
+      // - load all script tags from localstorage by searching for `kotatsu-script: id`
+      for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        let value = localStorage.getItem(key);
+        if (key.includes("kotatsu-script")) {
+          let s = document.createElement("script");
+          s.id = key.substr(16);
+          s.innerHTML = value;
+          body.appendChild(s);
+        }
+      }
+      
       // watcher that watches for any update in the document
       // if there is an update to a script tag:
       // - save the element to localstorage where the key is the element.id
       var observer = new MutationObserver((mutations) => {
-        let scripts = document.querySelectorAll('script')
+        let scripts = document.querySelectorAll("script");
         for (let scr of scripts) {
           if (!localStorage.getItem(`kotatsu-script: ${scr.id}`)) {
-            localStorage.setItem(`kotatsu-script: ${scr.id}`, scr.innerHTML)
+            localStorage.setItem(`kotatsu-script: ${scr.id}`, scr.innerHTML);
             //document.body.appendChild(scr)
           }
         }
-      })
-
-      // - load all script tags from localstorage by searching for `kotatsu-script: id`
-      let scriptKeys = Object.keys(localStorage);
-      for (let i = 0; i < localStorage.length; i++) {
-        let key = localStorage.getItem(localStorage.key(i))
-        if (key.includes('kotatsu-script')) {
-          let s = document.createElement('script')
-          s.id = key.substr(16)
-          body.appendChild(s)
-        }
-      }
+      });
+      observer.observe(document.body, {
+        attributes: true,
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
     </script>
     <script id="save-styles">
-      if (localStorage.getItem('kotatsu')) {
-        document.querySelector('style').innerHTML = localStorage.getItem('kotatsu')
+      if (localStorage.getItem("kotatsu")) {
+        document.querySelector("style").innerHTML =
+          localStorage.getItem("kotatsu");
       }
       var observer = new MutationObserver(function (mutations) {
         console.log("New mutation");
