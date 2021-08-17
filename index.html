@@ -54,30 +54,95 @@
   <body>
     <button id="reset">Reset Board</button>
     <div id="grid"></div>
-    <!-- <script src="braidify-client.js"></script>
-    <script>
-      fetch("https://kotatsu-server-silk.vercel.app/api/board", {
+    <script src="braidify-client.js"></script>
+    <script id="load-board">
+      fetch("https://kotatsu.app/api/board", {
         subscribe: { keep_alive: true },
       }).andThen((version) => {
-        console.log("We got a new version!", version);
-        // {
-        //   version: "me",
-        //   parents: ["mom", "dad"],
-        //   patches: [{unit: "json", range: ".foo", content: "3"}]
-        //   body:    "3"
-        // }
-        //   // Version will contain either patches *or* body
         const board = JSON.parse(version.body);
-        console.log(board);
         const grid = document.getElementById("grid");
+        grid.innerHTML = '';
         for (let i = 1; i < 11; i++) {
           for (let j = 1; j < 11; j++) {
             let coord = board[`${i}_${j}`];
             grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
           }
         }
+
+        async function braidFetch(method, headers, body) {
+          const response = await fetch(`https://kotatsu.app/api/board`, {
+            method,
+            headers,
+            body,
+          });
+          const json = await response.json();
+          return json;
+        }
+
+        let isCtrlPressed = false;
+
+        document.addEventListener("keydown", (event) => {
+          if (event.ctrlKey) {
+            isCtrlPressed = true;
+          }
+        });
+
+        document.addEventListener("keyup", (event) => {
+          if (!event.ctrlKey) {
+            isCtrlPressed = false;
+          }
+        });
+
+        // for deployment
+        for (let i = 1; i < 11; i++) {
+          for (let j = 1; j < 11; j++) {
+            let c = document.getElementById(`${i}_${j}`);
+            c.addEventListener("keydown", async (event) => {
+              if (
+                event.key === "Backspace" ||
+                event.key === "Delete" ||
+                event.key === " " ||
+                event.key === "Enter"
+              ) {
+                event.preventDefault();
+              }
+            });
+            c.addEventListener("beforeinput", () => {
+              c.textContent = "";
+            });
+            c.addEventListener("input", async () => {
+              if (c.textContent.length > 5) {
+                c.textContent = ".";
+              }
+              const response = await braidFetch(
+                "PUT",
+                {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                JSON.stringify({
+                  char: c.textContent,
+                  coord: `${i}_${j}`,
+                })
+              );
+              console.log(response);
+            });
+          }
+        }
+
+        const reset_button = document.getElementById("reset");
+        reset_button.addEventListener("click", async () => {
+          for (let i = 1; i < 11; i++) {
+            for (let j = 1; j < 11; j++) {
+              let c = document.getElementById(`${i}_${j}`);
+              c.textContent = ".";
+            }
+          }
+          const response = await braidFetch("POST", {}, {});
+          console.log(response);
+        });
       });
-    </script> -->
+    </script>
     <script id="fork-me">
       console.log("fork me!");
       // - load all script tags from localstorage by searching for `kotatsu-script: id`
@@ -97,15 +162,21 @@
       // - save the element to localstorage where the key is the element.id
       var observer = new MutationObserver((mutations) => {
         let scripts = document.querySelectorAll("script");
-        for(let mutation of mutations) {
+
+        for (let mutation of mutations) {
           if (mutation.removedNodes.length) {
             const [removed] = mutation.removedNodes;
-            localStorage.removeItem(`kotatsu-script: ${removed.id}`)
+            localStorage.removeItem(`kotatsu-script: ${removed.id}`);
           }
         }
 
         for (let scr of scripts) {
-          if (scr.id != 'ui' && scr.id != 'fork-me' && scr.id != 'save-styles') {
+          if (
+            scr.id != "ui" &&
+            scr.id != "fork-me" &&
+            scr.id != "save-styles" &&
+            scr.id != "load-board"
+          ) {
             localStorage.setItem(`kotatsu-script: ${scr.id}`, scr.innerHTML);
           }
         }
@@ -136,6 +207,6 @@
         subtree: true,
       });
     </script>
-    <script src="ui.js" id="ui"></script>
+    <script id="ui"></script>
   </body>
 </html>

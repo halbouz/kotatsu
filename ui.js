@@ -12,16 +12,6 @@ async function braidFetch(method, headers, body) {
 }
 
 window.addEventListener("load", async () => {
-  const board = await braidFetch();
-  console.log(board);
-
-  const grid = document.getElementById("grid");
-  for (let i = 1; i < 11; i++) {
-    for (let j = 1; j < 11; j++) {
-      let coord = board[`${i}_${j}`];
-      grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
-    }
-  }
 
   let isCtrlPressed = false;
 
