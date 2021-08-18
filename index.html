@@ -20,13 +20,13 @@
       align-items: center;
       justify-items: center;
       display: inline-grid;
-      grid-template-columns: repeat(10, 10px);
-      grid-template-rows: repeat(10, 10px);
-      grid-gap: 3em;
+      grid-template-columns: repeat(25, 5px);
+      grid-template-rows: repeat(25, 5px);
+      grid-gap: 1.5em;
     }
 
     .cell {
-      font-size: 30px;
+      font-size: 20px;
       color: white;
       text-justify: center;
     }
@@ -36,11 +36,12 @@
     }
 
     #reset {
+      margin: 0.5em 0.5em 0.5em 0em;
       position: absolute;
       border-radius: 10%;
-      left: 50%;
+      left: 49.2%;
       transform: translateX(-50%);
-      height: 50px;
+      height: 30px;
       width: 100px;
       background-color: rgb(122, 122, 122);
       color: white;
@@ -65,8 +66,8 @@
         const board = JSON.parse(version.body);
         const grid = document.getElementById("grid");
         grid.innerHTML = '';
-        for (let i = 1; i < 11; i++) {
-          for (let j = 1; j < 11; j++) {
+        for (let i = 1; i < 26; i++) {
+          for (let j = 1; j < 26; j++) {
             let coord = board[`${i}_${j}`];
             grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
           }
@@ -95,8 +96,8 @@
         });
 
         // for deployment
-        for (let i = 1; i < 11; i++) {
-          for (let j = 1; j < 11; j++) {
+        for (let i = 1; i < 26; i++) {
+          for (let j = 1; j < 26; j++) {
             let c = document.getElementById(`${i}_${j}`);
             c.addEventListener("keydown", async (event) => {
               if (
@@ -132,8 +133,8 @@
 
         const reset_button = document.getElementById("reset");
         reset_button.addEventListener("click", async () => {
-          for (let i = 1; i < 11; i++) {
-            for (let j = 1; j < 11; j++) {
+          for (let i = 1; i < 26; i++) {
+            for (let j = 1; j < 26; j++) {
               let c = document.getElementById(`${i}_${j}`);
               c.textContent = ".";
             }
