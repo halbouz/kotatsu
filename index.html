@@ -1,61 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <link rel="stylesheet" href="main.css" /> -->
-    <style>
-      body {
-        width: 100%;
-        height: 100%;
-        background-color: rgb(65, 65, 65);
-      }
 
-      #grid {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        align-items: center;
-        justify-items: center;
-        display: inline-grid;
-        grid-template-columns: repeat(10, 10px);
-        grid-template-rows: repeat(10, 10px);
-        grid-gap: 3em;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- <link rel="stylesheet" href="main.css" /> -->
+  <style>
+    body {
+      width: 100%;
+      height: 100%;
+      background-color: rgb(65, 65, 65);
+    }
 
-      .cell {
-        font-size: 30px;
-        color: white;
-        text-justify: center;
-      }
+    #grid {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      align-items: center;
+      justify-items: center;
+      display: inline-grid;
+      grid-template-columns: repeat(10, 10px);
+      grid-template-rows: repeat(10, 10px);
+      grid-gap: 3em;
+    }
 
-      .cell:hover {
-        background-color: rgb(90, 90, 90);
-      }
+    .cell {
+      font-size: 30px;
+      color: white;
+      text-justify: center;
+    }
 
-      #reset {
-        position: absolute;
-        border-radius: 10%;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 50px;
-        width: 100px;
-        background-color: rgb(122, 122, 122);
-        color: white;
-      }
+    .cell:hover {
+      background-color: rgb(90, 90, 90);
+    }
 
-      #reset:hover {
-        background-color: rgb(87, 87, 87);
-      }
-    </style>
-    <title>Kotatsu</title>
-  </head>
-  <body>
-    <button id="reset">Reset Board</button>
-    <div id="grid"></div>
-    <script src="braidify-client.js"></script>
-    <script id="load-board">
+    #reset {
+      position: absolute;
+      border-radius: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 50px;
+      width: 100px;
+      background-color: rgb(122, 122, 122);
+      color: white;
+    }
+
+    #reset:hover {
+      background-color: rgb(87, 87, 87);
+    }
+  </style>
+  <title>Kotatsu</title>
+</head>
+
+<body>
+  <button id="reset">Reset Board</button>
+  <div id="grid"></div>
+  <script src="braidify-client.js"></script>
+  <script id="load-board">
+    function connect() {
       fetch("https://kotatsu.app/api/board", {
         subscribe: { keep_alive: true },
       }).andThen((version) => {
@@ -137,72 +140,75 @@
           }
           await braidFetch("POST", {}, {});
         });
-      });
-    </script>
-    <script id="fork-me">
-      console.log("fork me!");
-      // - load all script tags from localstorage by searching for `kotatsu-script: id`
-      for (let i = 0; i < localStorage.length; i++) {
-        let key = localStorage.key(i);
-        let value = localStorage.getItem(key);
-        if (key.includes("kotatsu-script")) {
-          let s = document.createElement("script");
-          s.id = key.substr(16);
-          s.innerHTML = value;
-          document.body.appendChild(s);
+      }).catch(e => setTimeout(connect, 1000));
+    }
+    connect();
+  </script>
+  <script id="fork-me">
+    console.log("fork me!");
+    // - load all script tags from localstorage by searching for `kotatsu-script: id`
+    for (let i = 0; i < localStorage.length; i++) {
+      let key = localStorage.key(i);
+      let value = localStorage.getItem(key);
+      if (key.includes("kotatsu-script")) {
+        let s = document.createElement("script");
+        s.id = key.substr(16);
+        s.innerHTML = value;
+        document.body.appendChild(s);
+      }
+    }
+
+    // watcher that watches for any update in the document
+    // if there is an update to a script tag:
+    // - save the element to localstorage where the key is the element.id
+    var observer = new MutationObserver((mutations) => {
+      let scripts = document.querySelectorAll("script");
+
+      for (let mutation of mutations) {
+        if (mutation.removedNodes.length) {
+          const [removed] = mutation.removedNodes;
+          localStorage.removeItem(`kotatsu-script: ${removed.id}`);
         }
       }
 
-      // watcher that watches for any update in the document
-      // if there is an update to a script tag:
-      // - save the element to localstorage where the key is the element.id
-      var observer = new MutationObserver((mutations) => {
-        let scripts = document.querySelectorAll("script");
-
-        for (let mutation of mutations) {
-          if (mutation.removedNodes.length) {
-            const [removed] = mutation.removedNodes;
-            localStorage.removeItem(`kotatsu-script: ${removed.id}`);
-          }
+      for (let scr of scripts) {
+        if (
+          scr.id != "ui" &&
+          scr.id != "fork-me" &&
+          scr.id != "save-styles" &&
+          scr.id != "load-board"
+        ) {
+          localStorage.setItem(`kotatsu-script: ${scr.id}`, scr.innerHTML);
         }
-
-        for (let scr of scripts) {
-          if (
-            scr.id != "ui" &&
-            scr.id != "fork-me" &&
-            scr.id != "save-styles" &&
-            scr.id != "load-board"
-          ) {
-            localStorage.setItem(`kotatsu-script: ${scr.id}`, scr.innerHTML);
-          }
-        }
-      });
-      observer.observe(document.body, {
-        attributes: true,
-        childList: true,
-        characterData: true,
-        subtree: true,
-      });
-    </script>
-    <script id="save-styles">
-      if (localStorage.getItem("kotatsu")) {
-        document.querySelector("style").innerHTML =
-          localStorage.getItem("kotatsu");
       }
-      var observer = new MutationObserver(function (mutations) {
-        console.log("New mutation");
-        localStorage.setItem(
-          "kotatsu",
-          document.querySelector("style").innerHTML
-        );
-      });
-      observer.observe(document.querySelector("style"), {
-        attributes: true,
-        childList: true,
-        characterData: true,
-        subtree: true,
-      });
-    </script>
-    <script id="ui"></script>
-  </body>
+    });
+    observer.observe(document.body, {
+      attributes: true,
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  </script>
+  <script id="save-styles">
+    if (localStorage.getItem("kotatsu")) {
+      document.querySelector("style").innerHTML =
+        localStorage.getItem("kotatsu");
+    }
+    var observer = new MutationObserver(function (mutations) {
+      console.log("New mutation");
+      localStorage.setItem(
+        "kotatsu",
+        document.querySelector("style").innerHTML
+      );
+    });
+    observer.observe(document.querySelector("style"), {
+      attributes: true,
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  </script>
+  <script id="ui"></script>
+</body>
+
 </html>
