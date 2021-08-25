@@ -139,26 +139,29 @@
       fetch("https://kotatsu.app/api/board", {
         subscribe: { keep_alive: true },
       }).andThen((version) => {
-
         // on load we fetch board and subscribe to all updates
         // the first version will be the board { [coord: string]: string }[], 
         // subsequent version will be patches at specific coords { coord: string, char: string } or
         // the entire board again (on reset)
 
         function handleBoard(update) {
-          for (const coord of update) {
+          for (const coord in update) {
             const element = document.getElementById(coord);
-            element.innerHTML = update[coord];
+            element.textContent = update[coord];
           }
         }
 
         function handleCoord(update) {
           const element = document.getElementById(update.coord);
-          element.innerHTML = update.char;
+          element.textContent = update.char;
         }
 
         const update = JSON.parse(version.body);
-        update.coord ? handleCoord(update) : handleBoard(update) ;
+        if (update.coord) {
+          handleCoord(update);
+        } else {
+          handleBoard(update);
+        }
         
         // const grid = document.getElementById("grid");
         // grid.innerHTML = '';
@@ -237,7 +240,7 @@
         //   }
         //   await braidFetch("POST", {}, {});
         // });
-      }).catch(e => setTimeout(connect, 1000));
+      }).catch(e => setTimeout(connect, 300000));
     }
     connect();
   </script>
