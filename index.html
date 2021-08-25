@@ -20,13 +20,13 @@
       align-items: center;
       justify-items: center;
       display: inline-grid;
-      grid-template-columns: repeat(10, 10px);
-      grid-template-rows: repeat(10, 10px);
-      grid-gap: 3em;
+      grid-template-columns: repeat(25, 5px);
+      grid-template-rows: repeat(25, 5px);
+      grid-gap: 1.5em;
     }
 
     .cell {
-      font-size: 30px;
+      font-size: 20px;
       color: white;
       text-justify: center;
     }
@@ -36,11 +36,12 @@
     }
 
     #reset {
+      margin: 0.5em 0.5em 0.5em 0em;
       position: absolute;
       border-radius: 10%;
-      left: 50%;
+      left: 49.2%;
       transform: translateX(-50%);
-      height: 50px;
+      height: 30px;
       width: 100px;
       background-color: rgb(122, 122, 122);
       color: white;
@@ -59,9 +60,8 @@
   <script src="braidify-client.js"></script>
   <script id="load-board">
     const grid = document.getElementById("grid");
-    grid.innerHTML = '';
-    for (let i = 1; i < 11; i++) {
-      for (let j = 1; j < 11; j++) {
+    for (let i = 1; i < 26; i++) {
+      for (let j = 1; j < 26; j++) {
         grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>.</div>`;
       }
     }
@@ -126,8 +126,8 @@
 
     const reset_button = document.getElementById("reset");
     reset_button.addEventListener("click", async () => {
-      for (let i = 1; i < 11; i++) {
-        for (let j = 1; j < 11; j++) {
+      for (let i = 1; i < 26; i++) {
+        for (let j = 1; j < 26; j++) {
           let c = document.getElementById(`${i}_${j}`);
           c.textContent = ".";
         }
@@ -163,83 +163,6 @@
           handleBoard(update);
         }
         
-        // const grid = document.getElementById("grid");
-        // grid.innerHTML = '';
-        // for (let i = 1; i < 11; i++) {
-        //   for (let j = 1; j < 11; j++) {
-        //     let coord = board[`${i}_${j}`];
-        //     grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
-        //   }
-        // }
-
-        // async function braidFetch(method, headers, body) {
-        //   await fetch(`https://kotatsu.app/api/board`, {
-        //     method,
-        //     headers,
-        //     body,
-        //   });
-        // }
-
-        // let isCtrlPressed = false;
-
-        // document.addEventListener("keydown", (event) => {
-        //   if (event.ctrlKey) {
-        //     isCtrlPressed = true;
-        //   }
-        // });
-
-        // document.addEventListener("keyup", (event) => {
-        //   if (!event.ctrlKey) {
-        //     isCtrlPressed = false;
-        //   }
-        // });
-
-        // // for deployment
-        // for (let i = 1; i < 11; i++) {
-        //   for (let j = 1; j < 11; j++) {
-        //     let c = document.getElementById(`${i}_${j}`);
-        //     c.addEventListener("keydown", async (event) => {
-        //       if (
-        //         event.key === "Backspace" ||
-        //         event.key === "Delete" ||
-        //         event.key === " " ||
-        //         event.key === "Enter"
-        //       ) {
-        //         event.preventDefault();
-        //       }
-        //     });
-        //     c.addEventListener("beforeinput", () => {
-        //       c.textContent = "";
-        //     });
-        //     c.addEventListener("input", async () => {
-        //       if (c.textContent.length > 5) {
-        //         c.textContent = ".";
-        //       }
-        //       await braidFetch(
-        //         "PUT",
-        //         {
-        //           Accept: "application/json",
-        //           "Content-Type": "application/json",
-        //         },
-        //         JSON.stringify({
-        //           char: c.textContent,
-        //           coord: `${i}_${j}`,
-        //         })
-        //       );
-        //     });
-        //   }
-        // }
-
-        // const reset_button = document.getElementById("reset");
-        // reset_button.addEventListener("click", async () => {
-        //   for (let i = 1; i < 11; i++) {
-        //     for (let j = 1; j < 11; j++) {
-        //      let c = document.getElementById(`${i}_${j}`);
-        //       c.textContent = ".";
-        //     }
-        //   }
-        //   await braidFetch("POST", {}, {});
-        // });
       }).catch(e => setTimeout(connect, 300000));
     }
     connect();
