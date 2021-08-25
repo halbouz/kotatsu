@@ -58,88 +58,185 @@
   <div id="grid"></div>
   <script src="braidify-client.js"></script>
   <script id="load-board">
+    const grid = document.getElementById("grid");
+    grid.innerHTML = '';
+    for (let i = 1; i < 11; i++) {
+      for (let j = 1; j < 11; j++) {
+        grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>.</div>`;
+      }
+    }
+
+    async function braidFetch(method, headers, body) {
+      await fetch(`https://kotatsu.app/api/board`, {
+        method,
+        headers,
+        body,
+      });
+    }
+
+    let isCtrlPressed = false;
+
+    document.addEventListener("keydown", (event) => {
+      if (event.ctrlKey) {
+        isCtrlPressed = true;
+      }
+    });
+
+    document.addEventListener("keyup", (event) => {
+      if (!event.ctrlKey) {
+        isCtrlPressed = false;
+      }
+    });
+
+    // for deployment
+    for (let i = 1; i < 11; i++) {
+      for (let j = 1; j < 11; j++) {
+        let c = document.getElementById(`${i}_${j}`);
+        c.addEventListener("keydown", async (event) => {
+          if (
+            event.key === "Backspace" ||
+            event.key === "Delete" ||
+            event.key === " " ||
+            event.key === "Enter"
+          ) {
+            event.preventDefault();
+          }
+        });
+        c.addEventListener("beforeinput", () => {
+          c.textContent = "";
+        });
+        c.addEventListener("input", async () => {
+          if (c.textContent.length > 5) {
+            c.textContent = ".";
+          }
+          await braidFetch(
+            "PUT",
+            {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            JSON.stringify({
+              char: c.textContent,
+              coord: `${i}_${j}`,
+            })
+          );
+        });
+      }
+    }
+
+    const reset_button = document.getElementById("reset");
+    reset_button.addEventListener("click", async () => {
+      for (let i = 1; i < 11; i++) {
+        for (let j = 1; j < 11; j++) {
+          let c = document.getElementById(`${i}_${j}`);
+          c.textContent = ".";
+        }
+      }
+      await braidFetch("POST", {}, {});
+    });
+
     function connect() {
       fetch("https://kotatsu.app/api/board", {
         subscribe: { keep_alive: true },
       }).andThen((version) => {
-        const board = JSON.parse(version.body);
-        const grid = document.getElementById("grid");
-        grid.innerHTML = '';
-        for (let i = 1; i < 11; i++) {
-          for (let j = 1; j < 11; j++) {
-            let coord = board[`${i}_${j}`];
-            grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
+
+        // on load we fetch board and subscribe to all updates
+        // the first version will be the board { [coord: string]: string }[], 
+        // subsequent version will be patches at specific coords { coord: string, char: string } or
+        // the entire board again (on reset)
+
+        function handleBoard(update) {
+          for (const coord of update) {
+            const element = document.getElementById(coord);
+            element.innerHTML = update[coord];
           }
         }
 
-        async function braidFetch(method, headers, body) {
-          await fetch(`https://kotatsu.app/api/board`, {
-            method,
-            headers,
-            body,
-          });
+        function handleCoord(update) {
+          const element = document.getElementById(update.coord);
+          element.innerHTML = update.char;
         }
 
-        let isCtrlPressed = false;
+        const update = JSON.parse(version.body);
+        update.coord ? handleCoord(update) : handleBoard(update) ;
+        
+        // const grid = document.getElementById("grid");
+        // grid.innerHTML = '';
+        // for (let i = 1; i < 11; i++) {
+        //   for (let j = 1; j < 11; j++) {
+        //     let coord = board[`${i}_${j}`];
+        //     grid.innerHTML += `<div class='cell' id='${i}_${j}' contenteditable=true>${coord}</div>`;
+        //   }
+        // }
 
-        document.addEventListener("keydown", (event) => {
-          if (event.ctrlKey) {
-            isCtrlPressed = true;
-          }
-        });
+        // async function braidFetch(method, headers, body) {
+        //   await fetch(`https://kotatsu.app/api/board`, {
+        //     method,
+        //     headers,
+        //     body,
+        //   });
+        // }
 
-        document.addEventListener("keyup", (event) => {
-          if (!event.ctrlKey) {
-            isCtrlPressed = false;
-          }
-        });
+        // let isCtrlPressed = false;
 
-        // for deployment
-        for (let i = 1; i < 11; i++) {
-          for (let j = 1; j < 11; j++) {
-            let c = document.getElementById(`${i}_${j}`);
-            c.addEventListener("keydown", async (event) => {
-              if (
-                event.key === "Backspace" ||
-                event.key === "Delete" ||
-                event.key === " " ||
-                event.key === "Enter"
-              ) {
-                event.preventDefault();
-              }
-            });
-            c.addEventListener("beforeinput", () => {
-              c.textContent = "";
-            });
-            c.addEventListener("input", async () => {
-              if (c.textContent.length > 5) {
-                c.textContent = ".";
-              }
-              await braidFetch(
-                "PUT",
-                {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                },
-                JSON.stringify({
-                  char: c.textContent,
-                  coord: `${i}_${j}`,
-                })
-              );
-            });
-          }
-        }
+        // document.addEventListener("keydown", (event) => {
+        //   if (event.ctrlKey) {
+        //     isCtrlPressed = true;
+        //   }
+        // });
 
-        const reset_button = document.getElementById("reset");
-        reset_button.addEventListener("click", async () => {
-          for (let i = 1; i < 11; i++) {
-            for (let j = 1; j < 11; j++) {
-              let c = document.getElementById(`${i}_${j}`);
-              c.textContent = ".";
-            }
-          }
-          await braidFetch("POST", {}, {});
-        });
+        // document.addEventListener("keyup", (event) => {
+        //   if (!event.ctrlKey) {
+        //     isCtrlPressed = false;
+        //   }
+        // });
+
+        // // for deployment
+        // for (let i = 1; i < 11; i++) {
+        //   for (let j = 1; j < 11; j++) {
+        //     let c = document.getElementById(`${i}_${j}`);
+        //     c.addEventListener("keydown", async (event) => {
+        //       if (
+        //         event.key === "Backspace" ||
+        //         event.key === "Delete" ||
+        //         event.key === " " ||
+        //         event.key === "Enter"
+        //       ) {
+        //         event.preventDefault();
+        //       }
+        //     });
+        //     c.addEventListener("beforeinput", () => {
+        //       c.textContent = "";
+        //     });
+        //     c.addEventListener("input", async () => {
+        //       if (c.textContent.length > 5) {
+        //         c.textContent = ".";
+        //       }
+        //       await braidFetch(
+        //         "PUT",
+        //         {
+        //           Accept: "application/json",
+        //           "Content-Type": "application/json",
+        //         },
+        //         JSON.stringify({
+        //           char: c.textContent,
+        //           coord: `${i}_${j}`,
+        //         })
+        //       );
+        //     });
+        //   }
+        // }
+
+        // const reset_button = document.getElementById("reset");
+        // reset_button.addEventListener("click", async () => {
+        //   for (let i = 1; i < 11; i++) {
+        //     for (let j = 1; j < 11; j++) {
+        //      let c = document.getElementById(`${i}_${j}`);
+        //       c.textContent = ".";
+        //     }
+        //   }
+        //   await braidFetch("POST", {}, {});
+        // });
       }).catch(e => setTimeout(connect, 1000));
     }
     connect();
