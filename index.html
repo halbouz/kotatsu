@@ -59,6 +59,9 @@
   <div id="grid"></div>
   <script src="braidify-client.js"></script>
   <script id="load-board">
+
+    let topic = window.location.pathname;
+
     const grid = document.getElementById("grid");
     for (let i = 1; i < 26; i++) {
       for (let j = 1; j < 26; j++) {
@@ -67,7 +70,7 @@
     }
 
     async function braidFetch(method, headers, body) {
-      await fetch(`https://kotatsu.app/api/board`, {
+      await fetch(`https://kotatsu.app/api/${topic}`, {
         method,
         headers,
         body,
@@ -136,7 +139,7 @@
     });
 
     function connect() {
-      fetch("https://kotatsu.app/api/board", {
+      fetch(`https://kotatsu.app/api/${topic}`, {
         subscribe: { keep_alive: true },
       }).andThen((version) => {
         // on load we fetch board and subscribe to all updates
