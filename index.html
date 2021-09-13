@@ -70,7 +70,11 @@
     }
 
     async function braidFetch(method, headers, body) {
-      await fetch(`https://kotatsu.app/api/${topic}`, {
+      let url;
+      if (topic === '/') url = `https://kotatsu.app/api/`;
+      else url = `https://kotatsu.app/api/${topic}`;
+
+      await fetch(url, {
         method,
         headers,
         body,
@@ -139,7 +143,11 @@
     });
 
     function connect() {
-      fetch(`https://kotatsu.app/api/${topic}`, {
+      let url;
+      if (topic === '/') url = `https://kotatsu.app/api/`;
+      else url = `https://kotatsu.app/api/${topic}`;
+      
+      fetch(url, {
         subscribe: { keep_alive: true },
       }).andThen((version) => {
         // on load we fetch board and subscribe to all updates
